@@ -25,7 +25,7 @@ const botList = [
         name: "Dogee Bot",
         description: "跳转到Dogee Bot",
         icon: "assets/icons/dogeeBot.jpg",
-        botUrl: "dogeebot_bot&start=rs-cap-"
+        botUrl: "dogeebot_bot&start=rt_17339252744795_"
     },
     {
         name: "PinkPunk Bot",
