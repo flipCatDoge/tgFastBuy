@@ -1,0 +1,78 @@
+.custom-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 6px 12px !important;
+    margin-right: 5px !important;
+    background-color: transparent !important;
+    color: #0088cc !important;
+    border: 1px solid #0088cc !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    height: 36px !important;
+    width: 74px !important;
+    user-select: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    line-height: 1 !important;
+}
+
+@media (min-width: 768px) {
+    .custom-button {
+        width: 80px !important;
+    }
+}
+
+.custom-button:hover {
+    background-color: rgba(7, 193, 96, 0.3) !important; /* 增加透明度，让背景颜色更亮 */
+    /* transform: translateY(-1px) !important; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* 渐弱的阴影 */
+    border-color: #0080ff !important; /* 更亮的蓝色边框 */
+    color: #0080ff !important; /* 更亮的文字颜色 */
+}
+
+.custom-button:active {
+    transform: translateY(0) !important;
+    background-color: rgba(7, 193, 96, 0.2) !important;
+}
+
+.custom-button .button-icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+/* 添加禁用状态样式 */
+.custom-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 添加加载状态样式 */
+.custom-button.loading {
+    cursor: wait;
+    opacity: 0.8;
+}
+
+/* 确保按钮在卡片中的位置正确 */
+.some-card {
+    position: relative;
+}
+
+/* 删除这些样式，因为它们应该在popup.css中 */
+ /* 添加选中状态样式 */
+.bot-card.selected {
+    border: 2px solid #0088cc !important;
+    background-color: rgba(0, 136, 204, 0.1) !important;
+    transform: translateY(-2px) !important;
+}
+ 
+.bot-card.selected:hover {
+    transform: translateY(-2px) !important;
+} 
