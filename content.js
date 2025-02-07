@@ -134,6 +134,61 @@ function addButtonToCards() {
             targetButton.insertAdjacentElement('beforebegin', button);
         });
     }
+    else if(window.location.hostname === 'neo.bullx.io'){
+        // console.log('查找 neo 卡片...')
+        const cards = document.querySelectorAll('.some-card');
+        if (!cards.length) return;
+        cards.forEach(card => {
+            // 检查是否已经添加过按钮
+            if (card.querySelector('.custom-button')) return;
+
+            // 获取卡片合约地址
+            const tokenCaElement = card.querySelector(':scope > a');
+            // 获取 href 属性
+            const href = tokenCaElement.getAttribute('href');
+
+            // 使用 URL 对象解析 href
+            const url = new URL(href, window.location.origin);
+
+            // 获取地址参数
+            const tokenCa = url.searchParams.get('address');
+
+            // 获取目标容器
+            // const targetButton = card.querySelector(':scope > div:last-child > div:first-child > div:last-child > div:last-child > button');
+            const targetButton = card.querySelector(':scope > div:last-child > div:first-child > div:last-child > div:last-child > button');
+            if (!targetButton) {
+                // console.log('未找到目标按钮');
+                return;
+            }
+            const button = document.createElement('button');
+            button.style.height = '30px';
+            button.style.width = '72px';
+            button.style.border = '1px solid #0088cc';
+            button.style.color = '#0088cc';
+            button.style.fontSize = '12px';
+            button.className = 'custom-button ant-btn-text neo-bullx-button z-20';
+            button.innerHTML = `
+                TG购买
+            `;
+            
+            // 添加点击事件
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const cardData = {
+                    id: card.dataset.id,
+                    title: card.querySelector('.title')?.textContent,
+                    ca:tokenCa,
+                };
+                
+                handleButtonClick(cardData);
+            });
+            
+            // 将按钮插入到目标button之前
+            targetButton.insertAdjacentElement('beforebegin', button);
+        });
+    }
 }
 
 // 处理按钮点击事件

@@ -1,5 +1,5 @@
 .custom-button {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center !important;
     justify-content: center !important;
     gap: 6px !important;
@@ -19,6 +19,14 @@
     position: relative !important;
     overflow: hidden !important;
     line-height: 1 !important;
+}
+
+.neo-bullx-button {
+    display: none; /* 默认隐藏 */
+}
+
+.some-card:hover .neo-bullx-button {
+    display: inline-flex; /* 父元素悬停时显示 */
 }
 
 @media (min-width: 768px) {

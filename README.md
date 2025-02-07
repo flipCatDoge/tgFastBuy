@@ -11,6 +11,8 @@
 4. 添加了对GMGN的支持
 ![gmgn扫链界面](images/2025-02-07-19-20-04.png)
 ![gmgn K线界面](images/2025-02-07-19-21-34.png)
+5. 添加了对neo.bullx.io的支持
+![neo.bullx扫链界面](images/2025-02-07-22-45-15.png)
 
 ## 使用教程
 1. 下载扩展文件夹，解压后将文件夹重命名为`tgFastBuy`
