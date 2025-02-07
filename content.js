@@ -56,7 +56,12 @@ function addButtonToCards() {
             // console.log('找到目标容器')
 
             const button = document.createElement('button');
-            button.className = 'custom-button css-g1urrz';
+            button.style.width = '48px';
+            button.style.height = '24px';
+            button.style.fontSize = '12px';
+            button.style.color = '#0077aa'; // 更深的蓝色
+            button.style.border = '1px solid #0077aa'; // 更深的蓝色
+            button.className = 'custom-button';
             button.innerHTML = `TG购买`;
             
             // 添加点击事件
@@ -102,6 +107,10 @@ function addButtonToCards() {
                 return;
             }
             const button = document.createElement('button');
+            button.style.height = '36px';
+            button.style.border = '1px solid #0088cc';
+            button.style.color = '#0088cc';
+            button.style.fontSize = '13px';
             button.className = 'custom-button ant-btn ant-btn-text z-20';
             button.innerHTML = `
                 TG购买
@@ -205,7 +214,11 @@ function addButtonToTerminal() {
                 const button = document.createElement('button');
                 button.className = 'custom-button ant-btn ant-btn-text z-20';
                 button.style.margin = '0';
-                button.style.width = '163px';
+                button.style.width = '268px';
+                button.style.height = '36px';
+                button.style.border = '1px solid #0088cc';
+                button.style.color = '#0088cc';
+                button.style.fontSize = '13px';
                 button.innerHTML = `TG购买`;
 
                 button.addEventListener('click', (e) => {
@@ -263,9 +276,10 @@ function addButtonToTerminal() {
                 
                 // 创建按钮
                 const button = document.createElement('button');
-                button.className = 'custom-button css-g1urrz z-20';
+                button.className = 'custom-button z-20';
                 button.style.margin = '0';
                 button.style.width = '268px';
+                button.style.height = '36px';
                 button.innerHTML = `TG购买`;
 
                 button.addEventListener('click', (e) => {

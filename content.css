@@ -6,14 +6,14 @@
     padding: 6px 12px !important;
     margin-right: 5px !important;
     background-color: transparent !important;
-    color: #0088cc !important;
-    border: 1px solid #0088cc !important;
+    color: #0088cc;
+    border: 1px solid #0088cc;
     border-radius: 6px !important;
     cursor: pointer !important;
-    font-size: 13px !important;
+    font-size: 13px;
     font-weight: 500 !important;
     transition: all 0.2s ease !important;
-    height: 36px !important;
+    height: 36px;
     width: 74px ;
     user-select: none !important;
     position: relative !important;
