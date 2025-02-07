@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TG Bot Fast Buy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TG Bot 快速购买插件",
   "permissions": [
     "activeTab",
@@ -19,8 +19,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://bullx.io/pump-vision/*",
-        "https://bullx.io/terminal*"
+        "https://bullx.io/*",
+        "https://gmgn.ai/*"
       ],
       "js": ["content.js"],
       "css": ["content.css"]

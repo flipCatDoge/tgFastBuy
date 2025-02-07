@@ -33,6 +33,12 @@ const botList = [
         icon: "assets/icons/pinkPunkBot.jpg",
         botUrl: "PinkPunkTradingBot&start="
     },
+    {
+        name: "Ave Bot",
+        description: "跳转到Ave Bot",
+        icon: "assets/icons/aveBot.jpg",
+        botUrl: "AveSniperBot_02_bot&start="
+    }
     // 可以添加更多bot
 ];
 

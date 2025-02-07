@@ -14,7 +14,7 @@
     font-weight: 500 !important;
     transition: all 0.2s ease !important;
     height: 36px !important;
-    width: 74px !important;
+    width: 74px ;
     user-select: none !important;
     position: relative !important;
     overflow: hidden !important;
@@ -23,7 +23,7 @@
 
 @media (min-width: 768px) {
     .custom-button {
-        width: 80px !important;
+        width: 80px;
     }
 }
 
