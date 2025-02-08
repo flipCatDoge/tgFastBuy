@@ -55,7 +55,7 @@ function addButtonToCards() {
             // 获取卡片合约地址
             const tokenCaElement = card.querySelector(':scope > div > a');
             if (!tokenCaElement) {
-                console.log('未找到合约地址元素');
+                // console.log('未找到合约地址元素');
                 return;
             }
             // 从 href 中提取合约地址
@@ -65,10 +65,9 @@ function addButtonToCards() {
             const targetContainer = card.querySelector('.css-ko0mam');
             
             if (!targetContainer) {
-                console.log('未找到目标容器');
+                // console.log('未找到目标容器');
                 return;
             }
-            // console.log('找到目标容器')
 
             const button = document.createElement('button');
             button.style.width = '48px';
@@ -296,7 +295,7 @@ const observer = new MutationObserver((mutations) => {
                 if (mutation.type === 'childList') {
                     const urlNow = window.location.href;
                     if (urlNow !== lastWebUrl) {
-                        console.log('路由变化，重新初始化');
+                        // console.log('路由变化，重新初始化');
                         lastWebUrl = urlNow;
                         shouldAddButtons = true;
                     }
@@ -433,7 +432,7 @@ function addButtonToTerminal() {
                 // 如果按钮存在且 tokenCa 不相等
                 if (tokenCa !== tokenCaLast) {
                     tokenCaLast = tokenCa
-                    console.log('tokenCaLast:', tokenCaLast)
+                    // console.log('tokenCaLast:', tokenCaLast)
                     
                     // 移除旧的事件监听器（如果需要，确保防止重复监听）
                     existingButton.removeEventListener('click', existingButton.clickListener);
@@ -448,12 +447,12 @@ function addButtonToTerminal() {
     }
     else if (window.location.pathname.includes('/lp/')) {
         // 获取合约地址从 URL
-        console.log('查找 phantom 交易页面...');
+        // console.log('查找 phantom 交易页面...');
         findTokenDivWithDelay();
         const tokenCaElement = document.querySelector('.c-dropdown.js-dropdown.js-wdd.c-wdd.u-mb-s.js-dca__wallets.is-item-loading');
         // 获取 data-address 属性值
         const tokenCa = tokenCaElement ? tokenCaElement.getAttribute('data-token-address') : null;
-        console.log('tokenCa:', tokenCa)
+        // console.log('tokenCa:', tokenCa)
         if (!tokenCa) {
             console.log('未找到合约地址');
             return;
@@ -468,7 +467,7 @@ function addButtonToTerminal() {
         const allContainers = document.querySelectorAll('.c-w-form__tab-content.js-show_presets__tab.js-tabs__content.is-selected');
         
         const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
-        console.log('targetContainer:', targetContainer)
+        // console.log('targetContainer:', targetContainer)
         if (targetContainer) {
             const existingButton = targetContainer.querySelector('.kline-custom-button');
             if(!existingButton){
@@ -494,7 +493,7 @@ function addButtonToTerminal() {
                 // 如果按钮存在且 tokenCa 不相等
                 if (tokenCa !== tokenCaLast) {
                     tokenCaLast = tokenCa
-                    console.log('tokenCaLast:', tokenCaLast)
+                    // console.log('tokenCaLast:', tokenCaLast)
                     
                     // 移除旧的事件监听器（如果需要，确保防止重复监听）
                     existingButton.removeEventListener('click', existingButton.clickListener);
