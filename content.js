@@ -193,20 +193,21 @@ function addButtonToCards() {
 
 // 处理按钮点击事件
 function handleButtonClick(cardData) {
-    chrome.storage.local.get(['currentBotUrl', 'lastUpdated'], function(result) {
+    chrome.storage.local.get(['currentBotUrl', 'currentRefCode','lastUpdated'], function(result) {
         const botUrl = result.currentBotUrl || 'helenus_trojanbot&start=r-redruncar-';
+        const refCode = result.currentRefCode || '';
         // console.log('botUrl:', botUrl, 'lastUpdated:', result.lastUpdated);
+        const tgUrlHeader = 'tg://resolve?domain=';
         if(botUrl.includes('PinkPunkTradingBot')){
-            const tgUrl = `tg://resolve?domain=${botUrl}${cardData.ca}-6287092183-501`;
+            const tgUrl = `${tgUrlHeader}${botUrl}${cardData.ca}${refCode}`;
             window.location.href = tgUrl;
         }
-        else if(botUrl.includes('AveSniperBot_02_bot')){
-            const tgUrl = `tg://resolve?domain=${botUrl}${cardData.ca}-redruncar`;
+        else if(botUrl.includes('AveSniperBot')){
+            const tgUrl = `${tgUrlHeader}${botUrl}${cardData.ca}${refCode}`;
             window.location.href = tgUrl;
         }
         else{
-            const tgUrl = `tg://resolve?domain=${botUrl}${cardData.ca}`;
-            // console.log('tgUrl:', tgUrl)
+            const tgUrl = `${tgUrlHeader}${botUrl}${refCode}${cardData.ca}`;
             window.location.href = tgUrl;
         }
     });
@@ -244,7 +245,7 @@ const observerConfig = {
 
 // 开始观察
 observer.observe(document.body, observerConfig);
-
+let tokenCaLast = "";
 // 修改addButtonToTerminal函数
 function addButtonToTerminal() {
     // 检查是否是terminal页面
@@ -254,20 +255,26 @@ function addButtonToTerminal() {
         const urlParams = new URLSearchParams(window.location.search);
         const tokenCa = urlParams.get('address');
         if (!tokenCa) return;
+        // 更新事件监听器
+        const kLineButtonClickListener = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleButtonClick({ ca: tokenCa });
+        };
         // console.log('tokenCa:', tokenCa)
-        // 创建一个专门用于terminal页面的观察器
-        const terminalObserver = new MutationObserver((mutations, observer) => {
-            const allContainers = document.querySelectorAll('.custom-tab');
-            const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
+        const allContainers = document.querySelectorAll('.kline-custom-tab');
+        const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
 
-            if (targetContainer && !targetContainer.querySelector('.custom-button')) {
+        if (targetContainer ) {
+            const existingButton = targetContainer.querySelector('.custom-button')
+            if(!existingButton){
                 // 创建包装容器来实现居中
                 const buttonWrapper = document.createElement('div');
                 buttonWrapper.style.cssText = 'width: 100%; display: flex; justify-content: center; margin: 10px 0;';
                 
                 // 创建按钮
                 const button = document.createElement('button');
-                button.className = 'custom-button ant-btn ant-btn-text z-20';
+                button.className = 'kline-custom-tab custom-button ant-btn ant-btn-text z-20';
                 button.style.margin = '0';
                 button.style.width = '268px';
                 button.style.height = '36px';
@@ -276,33 +283,31 @@ function addButtonToTerminal() {
                 button.style.fontSize = '13px';
                 button.innerHTML = `TG购买`;
 
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleButtonClick({ ca: tokenCa });
-                });
-
+                button.addEventListener('click', kLineButtonClickListener);
+                // 为了防止重复绑定，记录已经绑定的事件监听器
+                button.clickListener = kLineButtonClickListener;
+                
                 buttonWrapper.appendChild(button);
                 targetContainer.insertAdjacentElement('beforeend', buttonWrapper);
-                
-                // 按钮添加成功后停止观察
-                observer.disconnect();
             }
-        });
-
-        // 开始观察整个文档
-        terminalObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // 30秒后停止观察，避免无限运行
-        setTimeout(() => terminalObserver.disconnect(), 30000);
+            else{
+                // 如果按钮存在且 tokenCa 不相等
+                if (tokenCa !== tokenCaLast) {
+                    tokenCaLast = tokenCa
+                    
+                    // 移除旧的事件监听器（如果需要，确保防止重复监听）
+                    existingButton.removeEventListener('click', existingButton.clickListener);
+        
+                    // 更新事件监听器
+                    existingButton.addEventListener('click', kLineButtonClickListener);
+                    // 为了防止重复绑定，记录已经绑定的事件监听器
+                    existingButton.clickListener = kLineButtonClickListener;
+                }
+            }
+        }
     }
     else if (window.location.pathname.includes('/sol/token/')) {
-
         // console.log('查找 GMGN token 详情页...')
-
         // 获取合约地址从 URL
         const tokenLink = window.location.pathname.split('/').pop();
         if (!tokenLink) {
@@ -318,47 +323,53 @@ function addButtonToTerminal() {
             inputString = tokenLink;
         }
         const tokenCa = inputString;
-        // 创建一个专门用于solToken页面的观察器
-        const solTokenObserver = new MutationObserver((mutations, observer) => {
-            const allContainers = document.querySelectorAll('.css-1hdbc19');
-            // console.log('allContainers:', allContainers)
-            const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
+        // 更新事件监听器
+        const kLineButtonClickListener = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleButtonClick({ ca: tokenCa });
+        };
+        const allContainers = document.querySelectorAll('.css-1hdbc19');
+        // console.log('allContainers:', allContainers)
+        const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
 
-            if (targetContainer && !targetContainer.querySelector('.custom-button')) {
+        if (targetContainer) {
+            const existingButton = targetContainer.querySelector('.kline-custom-tab');
+            if(!existingButton){
                 // 创建包装容器来实现居中
                 const buttonWrapper = document.createElement('div');
                 buttonWrapper.style.cssText = 'width: 100%; display: flex; justify-content: center; margin: 10px 0;';
-                
                 // 创建按钮
                 const button = document.createElement('button');
-                button.className = 'custom-button z-20';
+                button.className = 'kline-custom-tab custom-button z-20';
                 button.style.margin = '0';
                 button.style.width = '268px';
                 button.style.height = '36px';
                 button.innerHTML = `TG购买`;
-
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleButtonClick({ ca: tokenCa });
-                });
-
+                
+                button.addEventListener('click', kLineButtonClickListener);
+                // 为了防止重复绑定，记录已经绑定的事件监听器
+                button.clickListener = kLineButtonClickListener;
+                
                 buttonWrapper.appendChild(button);
                 targetContainer.insertAdjacentElement('beforeend', buttonWrapper);
-                
-                // 按钮添加成功后停止观察
-                observer.disconnect();
             }
-        });
-
-        // 开始观察整个文档
-        solTokenObserver.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-
-        // 30秒后停止观察，避免无限运行
-        setTimeout(() => solTokenObserver.disconnect(), 30000);
+            else {
+                // 如果按钮存在且 tokenCa 不相等
+                if (tokenCa !== tokenCaLast) {
+                    tokenCaLast = tokenCa
+                    console.log('tokenCaLast:', tokenCaLast)
+                    
+                    // 移除旧的事件监听器（如果需要，确保防止重复监听）
+                    existingButton.removeEventListener('click', existingButton.clickListener);
+        
+                    // 更新事件监听器
+                    existingButton.addEventListener('click', kLineButtonClickListener);
+                    // 为了防止重复绑定，记录已经绑定的事件监听器
+                    existingButton.clickListener = kLineButtonClickListener;
+                }
+            }
+        }
     }
 }
 
@@ -374,23 +385,23 @@ function initialize() {
 function delayedInitialize() {
     setTimeout(() => {
         if (document.querySelector('.g-table-row')) {
-            console.log('找到g-table-row,初始化')
+            // console.log('找到g-table-row,初始化')
             initialize();
         } 
         else if(document.querySelector('.some-card')){
-            console.log('找到some-card,初始化')
+            // console.log('找到some-card,初始化')
             initialize();
         }
         else if(document.querySelector('.custom-tab')){
-            console.log('找到custom-tab,初始化')
+            // console.log('找到custom-tab,初始化')
             initialize();
         }
         else if(document.querySelector('.css-1hdbc19')){
-            console.log('找到css-1i27l4i,初始化')
+            // console.log('找到css-1i27l4i,初始化')
             initialize();
         }
         else {
-            console.log('未找到任何元素,继续尝试')
+            // console.log('未找到任何元素,继续尝试')
             // 如果未找到，继续尝试
             delayedInitialize();
         }
@@ -406,6 +417,9 @@ let lastUrl = location.href;
 new MutationObserver(() => {
     const url = location.href;
     if (url !== lastUrl) {
+        // console.log('路由变化，重新初始化');
+        // console.log('url:', url);
+        // console.log('lastUrl:', lastUrl);
         lastUrl = url;
         initialize();
     }
