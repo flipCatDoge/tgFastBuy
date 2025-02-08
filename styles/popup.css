@@ -88,4 +88,33 @@ h1 {
 .bot-description {
     font-size: 14px;
     color: #86868b;
+}
+
+/* 添加线路选择器样式 */
+.route-selector {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+
+.route-button {
+    padding: 6px 12px;
+    border: 1px solid #0088cc;
+    border-radius: 6px;
+    background: transparent;
+    color: #0088cc;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.route-button:hover {
+    background: rgba(0, 136, 204, 0.1);
+}
+
+.route-button.active {
+    background: #0088cc;
+    color: white;
 } 

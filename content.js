@@ -26,9 +26,24 @@ async function findCardsWithDelay() {
     }
 }
 
+async function findTokenDivWithDelay() {
+    for (let i = 0; i < 3; i++) {
+        const div = document.querySelector('.c-dropdown.js-dropdown.js-wdd.c-wdd.u-mb-s.js-dca__wallets.is-item-loading');
+        if (div) {
+            if(i>0){
+                addButtonToTerminal();
+            }
+            // console.log('0.找到token div:', div);
+            break;
+        }
+        // console.log('未找到按钮，等待500ms后重试');
+        await new Promise(resolve => setTimeout(resolve, 500)); // 等待500ms
+    }
+}
+
 // 修改添加按钮的主函数
 function addButtonToCards() {
-    if (window.location.pathname.includes('/meme')||window.location.search.includes('chain=sol')) {
+    if (window.location.search.includes('chain=sol')) {
         // console.log('查找 GMGN meme 卡片...')
         // 修改选择器以更准确地匹配 GMGN 的卡片
         findCardsWithDelay();
@@ -189,6 +204,57 @@ function addButtonToCards() {
             targetButton.insertAdjacentElement('beforebegin', button);
         });
     }
+    else if(window.location.pathname.includes('/memescope')){
+        // console.log('查找 memescope 卡片...')
+        const cards = document.querySelectorAll('.sBVBv2HePq7qYTpGDmRM');
+        if (!cards.length) return;
+        cards.forEach(card => {
+            // 检查是否已经添加过按钮
+            if (card.querySelector('.custom-button')) return;
+
+            // 获取卡片合约地址
+            const tokenCaElement = card.querySelector('.fsYi35goS5HvMls5HBGU');
+
+            // 获取 data-address 属性值
+            const tokenCa = tokenCaElement ? tokenCaElement.getAttribute('data-address') : null;
+            // console.log('tokenCa:', tokenCa)
+            // 获取目标容器
+            const targetButton = card.querySelector('.CZ9XtNP_BJSquWvM6_r8 > button');
+            
+            if (!targetButton) {
+                console.log('未找到目标按钮');
+                return;
+            }
+            const button = document.createElement('button');
+            button.style.width = '70px';
+            button.style.height = '30px';
+            button.style.border = '1px solid #0088cc';
+            button.style.color = '#0088cc';
+            button.style.fontSize = '12px';
+            button.style.zIndex = '2';
+            button.className = 'custom-button';
+            button.innerHTML = `
+                TG购买
+            `;
+            
+            // 添加点击事件
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const cardData = {
+                    id: card.dataset.id,
+                    title: card.querySelector('.title')?.textContent,
+                    ca:tokenCa,
+                };
+                
+                handleButtonClick(cardData);
+            });
+            
+            // 将按钮插入到目标button之前
+            targetButton.insertAdjacentElement('beforebegin', button);
+        });
+    }
 }
 
 // 处理按钮点击事件
@@ -216,15 +282,24 @@ function handleButtonClick(cardData) {
 // 创建一个防抖版本的添加按钮函数
 const debouncedAddButtons = debounce(addButtonToCards, 200);
 
+let lastWebUrl = '';
 // 使用 MutationObserver 监听DOM变化
 const observer = new MutationObserver((mutations) => {
     let shouldAddButtons = false;
-    
     mutations.forEach(mutation => {
         if (mutation.addedNodes.length) {
             mutation.addedNodes.forEach(node => {
-                if (node.classList && (node.classList.contains('some-card') || node.classList.contains('g-table-row'))) {
+                if (node.classList && (node.classList.contains('some-card') || node.classList.contains('g-table-row') || node.classList.contains('sBVBv2HePq7qYTpGDmRM'))) {
                     shouldAddButtons = true;
+                }
+                // 监听路由变化
+                if (mutation.type === 'childList') {
+                    const urlNow = window.location.href;
+                    if (urlNow !== lastWebUrl) {
+                        console.log('路由变化，重新初始化');
+                        lastWebUrl = urlNow;
+                        shouldAddButtons = true;
+                    }
                 }
             });
         }
@@ -262,11 +337,11 @@ function addButtonToTerminal() {
             handleButtonClick({ ca: tokenCa });
         };
         // console.log('tokenCa:', tokenCa)
-        const allContainers = document.querySelectorAll('.kline-custom-tab');
+        const allContainers = document.querySelectorAll('.custom-tab');
         const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
 
         if (targetContainer ) {
-            const existingButton = targetContainer.querySelector('.custom-button')
+            const existingButton = targetContainer.querySelector('.kline-custom-button')
             if(!existingButton){
                 // 创建包装容器来实现居中
                 const buttonWrapper = document.createElement('div');
@@ -274,7 +349,7 @@ function addButtonToTerminal() {
                 
                 // 创建按钮
                 const button = document.createElement('button');
-                button.className = 'kline-custom-tab custom-button ant-btn ant-btn-text z-20';
+                button.className = 'kline-custom-button custom-button ant-btn ant-btn-text z-20';
                 button.style.margin = '0';
                 button.style.width = '268px';
                 button.style.height = '36px';
@@ -334,14 +409,14 @@ function addButtonToTerminal() {
         const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
 
         if (targetContainer) {
-            const existingButton = targetContainer.querySelector('.kline-custom-tab');
+            const existingButton = targetContainer.querySelector('.kline-custom-button');
             if(!existingButton){
                 // 创建包装容器来实现居中
                 const buttonWrapper = document.createElement('div');
                 buttonWrapper.style.cssText = 'width: 100%; display: flex; justify-content: center; margin: 10px 0;';
                 // 创建按钮
                 const button = document.createElement('button');
-                button.className = 'kline-custom-tab custom-button z-20';
+                button.className = 'kline-custom-button custom-button z-20';
                 button.style.margin = '0';
                 button.style.width = '268px';
                 button.style.height = '36px';
@@ -371,6 +446,70 @@ function addButtonToTerminal() {
             }
         }
     }
+    else if (window.location.pathname.includes('/lp/')) {
+        // 获取合约地址从 URL
+        console.log('查找 phantom 交易页面...');
+        findTokenDivWithDelay();
+        const tokenCaElement = document.querySelector('.c-dropdown.js-dropdown.js-wdd.c-wdd.u-mb-s.js-dca__wallets.is-item-loading');
+        // 获取 data-address 属性值
+        const tokenCa = tokenCaElement ? tokenCaElement.getAttribute('data-token-address') : null;
+        console.log('tokenCa:', tokenCa)
+        if (!tokenCa) {
+            console.log('未找到合约地址');
+            return;
+        }
+
+        // 更新事件监听器
+        const kLineButtonClickListener = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleButtonClick({ ca: tokenCa });
+        };
+        const allContainers = document.querySelectorAll('.c-w-form__tab-content.js-show_presets__tab.js-tabs__content.is-selected');
+        
+        const targetContainer = allContainers.length > 0 ? allContainers[0] : null;
+        console.log('targetContainer:', targetContainer)
+        if (targetContainer) {
+            const existingButton = targetContainer.querySelector('.kline-custom-button');
+            if(!existingButton){
+                // 创建包装容器来实现居中
+                const buttonWrapper = document.createElement('div');
+                buttonWrapper.style.cssText = 'width: 100%; display: flex; justify-content: center; margin: 10px 0;';
+                // 创建按钮
+                const button = document.createElement('button');
+                button.className = 'kline-custom-button custom-button z-20';
+                button.style.margin = '0';
+                button.style.width = '268px';
+                button.style.height = '36px';
+                button.innerHTML = `TG购买`;
+                
+                button.addEventListener('click', kLineButtonClickListener);
+                // 为了防止重复绑定，记录已经绑定的事件监听器
+                button.clickListener = kLineButtonClickListener;
+                
+                buttonWrapper.appendChild(button);
+                targetContainer.insertAdjacentElement('beforebegin', buttonWrapper);
+            }
+            else {
+                // 如果按钮存在且 tokenCa 不相等
+                if (tokenCa !== tokenCaLast) {
+                    tokenCaLast = tokenCa
+                    console.log('tokenCaLast:', tokenCaLast)
+                    
+                    // 移除旧的事件监听器（如果需要，确保防止重复监听）
+                    existingButton.removeEventListener('click', existingButton.clickListener);
+        
+                    // 更新事件监听器
+                    existingButton.addEventListener('click', kLineButtonClickListener);
+                    // 为了防止重复绑定，记录已经绑定的事件监听器
+                    existingButton.clickListener = kLineButtonClickListener;
+                }
+            }
+        }
+    }
+    // else{
+    //     console.log('非终端页面')
+    // }
 }
 
 // 修改初始化代码，同时支持两种页面
@@ -411,16 +550,3 @@ function delayedInitialize() {
 // 更新事件监听
 document.addEventListener('DOMContentLoaded', delayedInitialize);
 window.addEventListener('load', delayedInitialize);
-
-// 添加路由变化监听
-let lastUrl = location.href; 
-new MutationObserver(() => {
-    const url = location.href;
-    if (url !== lastUrl) {
-        // console.log('路由变化，重新初始化');
-        // console.log('url:', url);
-        // console.log('lastUrl:', lastUrl);
-        lastUrl = url;
-        initialize();
-    }
-}).observe(document, {subtree: true, childList: true}); 
