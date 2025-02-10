@@ -11,6 +11,7 @@ const routeConfigs = {
             "Trojan Bot": "helenus_trojanbot&start=",
             "Pepe Bot": "pepeboost_sol08_bot&start=",
             "GMGN Bot": "GMGN_sol03_bot&start=",
+            "Bloom Bot": "BloomSolanaEU1_bot?start=",
             "Dogee Bot": "dogeebot_bot&start=",
             "PinkPunk Bot": "PinkPunkTradingBot&start=",
             "Ave Bot": "AveSniperBot_02_bot&start="
@@ -22,6 +23,7 @@ const routeConfigs = {
             "Trojan Bot": "diomedes_trojanbot&start=",
             "Pepe Bot": "pepeboost_sol09_bot&start=",
             "GMGN Bot": "GMGN_sol04_bot&start=",
+            "Bloom Bot": "BloomSolanaEU2_bot?start=",
             "Dogee Bot": "Cola_Dogeebot&start=",
             "PinkPunk Bot": "PinkPunkTradingBot&start=",
             "Ave Bot": "AveSniperBot_01_bot&start="
@@ -33,6 +35,7 @@ const routeConfigs = {
             "Trojan Bot": "menelaus_trojanbot&start=",
             "Pepe Bot": "pepeboost_sol10_bot&start=",
             "GMGN Bot": "GMGN_sol05_bot&start=",
+            "Bloom Bot": "BloomSolanaUS1_bot?start=",
             "Dogee Bot": "Tars_Dogeebot&start=",
             "PinkPunk Bot": "PinkPunkTradingBot&start=",
             "Ave Bot": "AveSniperBot&start="
@@ -60,6 +63,12 @@ const botList = [
         description: "跳转到GMGN Bot",
         icon: "assets/icons/gmgnBot.jpg",
         refCode: "i_038a9Wdz_c_"
+    },
+    {
+        name: "Bloom Bot",
+        description: "跳转到Bloom Bot",
+        icon: "assets/icons/bloomBot.jpg",
+        refCode: "ref_F8URF9G6UV_ca_"
     },
     {
         name: "Dogee Bot",
