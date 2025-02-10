@@ -41,6 +41,21 @@ async function findTokenDivWithDelay() {
     }
 }
 
+async function findXxyyBuyDivWithDelay() {
+    for (let i = 0; i < 3; i++) {
+        const div = document.querySelector('[data-clipboard-text]');
+        if (div) {
+            if(i>0){
+                addButtonToTerminal();
+            }
+            console.log('0.找到xxyy div:', div);
+            break;
+        }
+        console.log('未找到按钮，等待500ms后重试');
+        await new Promise(resolve => setTimeout(resolve, 500)); // 等待500ms
+    }
+}
+
 // 修改添加按钮的主函数
 function addButtonToCards() {
     if (window.location.search.includes('chain=sol')) {
@@ -482,6 +497,76 @@ function addButtonToTerminal() {
                 button.style.height = '36px';
                 button.innerHTML = `TG购买`;
                 
+                button.addEventListener('click', kLineButtonClickListener);
+                // 为了防止重复绑定，记录已经绑定的事件监听器
+                button.clickListener = kLineButtonClickListener;
+                
+                buttonWrapper.appendChild(button);
+                targetContainer.insertAdjacentElement('beforebegin', buttonWrapper);
+            }
+            else {
+                // 如果按钮存在且 tokenCa 不相等
+                if (tokenCa !== tokenCaLast) {
+                    tokenCaLast = tokenCa
+                    // console.log('tokenCaLast:', tokenCaLast)
+                    
+                    // 移除旧的事件监听器（如果需要，确保防止重复监听）
+                    existingButton.removeEventListener('click', existingButton.clickListener);
+        
+                    // 更新事件监听器
+                    existingButton.addEventListener('click', kLineButtonClickListener);
+                    // 为了防止重复绑定，记录已经绑定的事件监听器
+                    existingButton.clickListener = kLineButtonClickListener;
+                }
+            }
+        }
+    }
+    else if (window.location.hostname === 'www.xxyy.io') {
+        // 获取合约地址从 URL
+        console.log('查找 www.xxyy.io 交易页面...');
+
+        findXxyyBuyDivWithDelay();
+
+        const tokenCaElement = document.querySelector('[data-clipboard-text]');
+        // 获取 data-address 属性值
+        const tokenCa = tokenCaElement ? tokenCaElement.getAttribute('data-clipboard-text') : null;
+        console.log('tokenCa:', tokenCa)
+        if (!tokenCa) {
+            console.log('未找到合约地址');
+            return;
+        }
+
+        // 更新事件监听器
+        const kLineButtonClickListener = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleButtonClick({ ca: tokenCa });
+        };
+
+        const xpath = '//span[@class="btn btn-green" and (text()="买入" or text()="Buy")]';
+        const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        const targetContainer = result.singleNodeValue;
+
+        console.log('targetContainer:', targetContainer)
+        if (targetContainer) {
+            const existingButton = targetContainer.parentElement.querySelector('.kline-custom-button');
+            if(!existingButton){
+                // 创建包装容器来实现居中
+                const buttonWrapper = document.createElement('div');
+                buttonWrapper.style.cssText = 'width: 100%; display: flex; justify-content: center; margin: 10px 0;';
+                // 创建按钮
+                const button = document.createElement('button');
+                button.className = 'kline-custom-button custom-button z-20';
+                button.style.margin = '0';
+                button.style.width = '294px';
+                button.style.height = '40px';
+                if(targetContainer.textContent.includes('Buy')){
+                    button.innerHTML = `TG Buy`;
+                }
+                else{
+                    button.innerHTML = `TG购买`;
+                }
+
                 button.addEventListener('click', kLineButtonClickListener);
                 // 为了防止重复绑定，记录已经绑定的事件监听器
                 button.clickListener = kLineButtonClickListener;

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TG Bot Fast Buy",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "TG Bot 快速购买插件",
   "permissions": [
     "activeTab",
@@ -22,7 +22,8 @@
         "https://bullx.io/*",
         "https://gmgn.ai/*",
         "https://neo.bullx.io/*",
-        "https://photon-sol.tinyastro.io/*"
+        "https://photon-sol.tinyastro.io/*",
+        "https://www.xxyy.io/*"
       ],
       "js": ["content.js"],
       "css": ["content.css"]
